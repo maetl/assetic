@@ -13,6 +13,7 @@ namespace Assetic\Asset;
 
 use Assetic\Asset\Iterator\AssetCollectionFilterIterator;
 use Assetic\Asset\Iterator\AssetCollectionIterator;
+use Assetic\Asset\Iterator\DebugAssetCollectionIterator;
 use Assetic\Filter\FilterCollection;
 use Assetic\Filter\FilterInterface;
 
@@ -31,6 +32,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
     private $clones;
     private $vars;
     private $values;
+	private $debug;
 
     /**
      * Constructor.
@@ -38,8 +40,9 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
      * @param array  $assets     Assets for the current collection
      * @param array  $filters    Filters for the current collection
      * @param string $sourceRoot The root directory
+     * @param bool $isDebug is this asset being requested with debug info enabled
      */
-    public function __construct($assets = array(), $filters = array(), $sourceRoot = null, array $vars = array())
+    public function __construct($assets = array(), $filters = array(), $sourceRoot = null, array $vars = array(), $isDebug = false)
     {
         $this->assets = array();
         foreach ($assets as $asset) {
@@ -51,6 +54,7 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
         $this->clones = new \SplObjectStorage();
         $this->vars = $vars;
         $this->values = array();
+	    $this->debug = $isDebug;
     }
 
     public function all()
@@ -193,7 +197,10 @@ class AssetCollection implements \IteratorAggregate, AssetCollectionInterface
      */
     public function getIterator()
     {
-        return new \RecursiveIteratorIterator(new AssetCollectionFilterIterator(new AssetCollectionIterator($this, $this->clones)));
+	    if((bool)$this->debug) {
+	        return new \RecursiveIteratorIterator(new AssetCollectionFilterIterator(new DebugAssetCollectionIterator($this, $this->clones)));
+	    }
+		return new \RecursiveIteratorIterator(new AssetCollectionFilterIterator(new AssetCollectionIterator($this, $this->clones)));
     }
 
     public function getVars()

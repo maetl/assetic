@@ -50,7 +50,6 @@ class AssetCollectionIterator implements \RecursiveIterator
     public function current($raw = false)
     {
         $asset = current($this->assets);
-
         if ($raw) {
             return $asset;
         }

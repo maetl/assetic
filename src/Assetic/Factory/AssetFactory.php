@@ -295,7 +295,7 @@ class AssetFactory
 
     protected function createAssetCollection(array $assets = array(), array $options = array())
     {
-        return new AssetCollection($assets, array(), null, isset($options['vars']) ? $options['vars'] : array());
+        return new AssetCollection($assets, array(), null, isset($options['vars']) ? $options['vars'] : array(), $this->isDebug());
     }
 
     protected function createAssetReference($name)

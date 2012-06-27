@@ -99,12 +99,12 @@ class GlobAsset extends AssetCollection
         foreach ($this->globs as $glob) {
             $glob = PathUtils::resolvePath($glob, $this->getVars(), $this->getValues());
 
-            if (false !== $paths = glob($glob)) {
-                foreach ($paths as $path) {
-                    $this->add(new FileAsset($path, array(), $this->getSourceRoot()));
-                }
-            }
-        }
+	    if (false !== $paths = glob($glob)) {
+		    foreach ($paths as $path) {
+			    $this->add(new FileAsset($path, array(), $this->getSourceRoot()));
+		    }
+	    }
+    }
 
         $this->initialized = true;
     }
